@@ -61,7 +61,7 @@ fi
 echo "🛠  Building Go project..."
 rm -rf "$BIN_DIR/opencoze"
 cd $BACKEND_DIR &&
-    go build -ldflags="-s -w" -o "$BIN_DIR/opencoze" main.go
+   CGO_ENABLED=0 go build -ldflags="-s -w" -o "$BIN_DIR/opencoze" main.go
 
 # 添加构建失败检查
 if [ $? -ne 0 ]; then

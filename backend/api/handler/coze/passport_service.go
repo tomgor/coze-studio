@@ -218,3 +218,31 @@ func UserUpdateProfile(ctx context.Context, c *app.RequestContext) {
 
 	c.JSON(http.StatusOK, resp)
 }
+
+// PassportWebSimpleSsoLoginPost .
+// @router /api/passport/web/email/simple-login/ [POST]
+func PassportWebSimpleSsoLoginPost(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req passport.PassportSimpleSsoLoginPostRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp, sessionKey, err := user.UserApplicationSVC.PassportWebSimpleSsoLoginPost(ctx, &req)
+	if err != nil {
+		internalServerErrorResponse(ctx, c, err)
+		return
+	}
+
+	logs.Infof("[PassportWebEmailLoginPost] sessionKey: %s", sessionKey)
+
+	c.SetCookie(entity.SessionKey,
+		sessionKey,
+		consts.SessionMaxAgeSecond,
+		"/", domain.GetOriginHost(c),
+		protocol.CookieSameSiteDefaultMode,
+		false, true)
+	c.JSON(http.StatusOK, resp)
+}

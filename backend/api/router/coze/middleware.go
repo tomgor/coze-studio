@@ -1605,3 +1605,13 @@ func _publicgetmarketpluginconfigMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _simple_loginMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _passportwebsimplessologinpostMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

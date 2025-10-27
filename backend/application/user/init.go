@@ -21,6 +21,7 @@ import (
 
 	"gorm.io/gorm"
 
+	userConfig "github.com/coze-dev/coze-studio/backend/domain/user/config"
 	"github.com/coze-dev/coze-studio/backend/domain/user/repository"
 	"github.com/coze-dev/coze-studio/backend/domain/user/service"
 	"github.com/coze-dev/coze-studio/backend/infra/idgen"
@@ -28,11 +29,14 @@ import (
 )
 
 func InitService(ctx context.Context, db *gorm.DB, oss storage.Storage, idgen idgen.IDGenerator) *UserApplicationService {
+	userConfig.InitConfig("/bin/resource/conf/user/config.yaml")
+
 	UserApplicationSVC.DomainSVC = service.NewUserDomain(ctx, &service.Components{
 		IconOSS:   oss,
 		IDGen:     idgen,
 		UserRepo:  repository.NewUserRepo(db),
 		SpaceRepo: repository.NewSpaceRepo(db),
+		Config:    *userConfig.GetConfig(),
 	})
 	UserApplicationSVC.oss = oss
 

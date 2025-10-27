@@ -49,6 +49,12 @@ struct PassportWebEmailLoginPostRequest {
     7: required string password
 }
 
+struct PassportSimpleSsoLoginPostRequest {
+    6: required string platform
+    7: required string key
+    8: required string payload
+}
+
 struct PassportWebEmailLoginPostResponse {
     1: required User data
 
@@ -114,6 +120,8 @@ service PassportService {
     // Email account password login
     PassportWebEmailLoginPostResponse PassportWebEmailLoginPost(1: PassportWebEmailLoginPostRequest req) (api.post="/api/passport/web/email/login/")
 
+    // simple login via sso
+    PassportWebEmailLoginPostResponse PassportWebSimpleSsoLoginPost(1: PassportSimpleSsoLoginPostRequest req) (api.post="/api/passport/web/email/simple-login/")
 
     // Reset password via email
     PassportWebEmailPasswordResetGetResponse PassportWebEmailPasswordResetGet(1: PassportWebEmailPasswordResetGetRequest req) (api.get="/api/passport/web/email/password/reset/")

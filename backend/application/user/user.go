@@ -131,6 +131,20 @@ func (u *UserApplicationService) PassportWebEmailLoginPost(ctx context.Context, 
 	}, userInfo.SessionKey, nil
 }
 
+func (u *UserApplicationService) PassportWebSimpleSsoLoginPost(ctx context.Context, req *passport.PassportSimpleSsoLoginPostRequest) (
+	resp *passport.PassportWebEmailLoginPostResponse, sessionKey string, err error,
+) {
+	userInfo, err := u.DomainSVC.SimpleSsoLogin(ctx, req.GetPlatform(), req.GetKey(), req.GetPayload())
+	if err != nil {
+		return nil, "", err
+	}
+
+	return &passport.PassportWebEmailLoginPostResponse{
+		Data: userDo2PassportTo(userInfo),
+		Code: 0,
+	}, userInfo.SessionKey, nil
+}
+
 func (u *UserApplicationService) PassportWebEmailPasswordResetGet(ctx context.Context, req *passport.PassportWebEmailPasswordResetGetRequest) (
 	resp *passport.PassportWebEmailPasswordResetGetResponse, err error,
 ) {

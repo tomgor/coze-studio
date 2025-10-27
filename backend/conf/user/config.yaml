@@ -1,0 +1,5 @@
+simple_sso:
+  - platform: 'agent-market'
+    public_key: ''
+    private_key: ''
+    init_password: 'Coze@2024'

@@ -33,6 +33,7 @@ import (
 	"golang.org/x/crypto/argon2"
 
 	uploadEntity "github.com/coze-dev/coze-studio/backend/domain/upload/entity"
+	userConfig "github.com/coze-dev/coze-studio/backend/domain/user/config"
 	userEntity "github.com/coze-dev/coze-studio/backend/domain/user/entity"
 	"github.com/coze-dev/coze-studio/backend/domain/user/internal/dal/model"
 	"github.com/coze-dev/coze-studio/backend/domain/user/repository"
@@ -52,6 +53,7 @@ type Components struct {
 	IDGen     idgen.IDGenerator
 	UserRepo  repository.UserRepository
 	SpaceRepo repository.SpaceRepository
+	Config    userConfig.Config
 }
 
 func NewUserDomain(ctx context.Context, c *Components) User {
@@ -82,6 +84,71 @@ func (u *userImpl) Login(ctx context.Context, email, password string) (user *use
 	if !valid {
 		return nil, errorx.New(errno.ErrUserInfoInvalidateCode)
 	}
+
+	uniqueSessionID, err := u.IDGen.GenID(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate session id: %w", err)
+	}
+
+	sessionKey, err := generateSessionKey(uniqueSessionID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Update user session key
+	err = u.UserRepo.UpdateSessionKey(ctx, userModel.ID, sessionKey)
+	if err != nil {
+		return nil, err
+	}
+
+	userModel.SessionKey = sessionKey
+
+	resURL, err := u.IconOSS.GetObjectUrl(ctx, userModel.IconURI)
+	if err != nil {
+		return nil, err
+	}
+
+	return userPo2Do(userModel, resURL), nil
+}
+
+func (u *userImpl) SimpleSsoLogin(ctx context.Context, platform, key, payload string) (user *userEntity.User, err error) {
+
+	userInfo, err := GetSimpleUserInfo(&u.Config, platform, key, payload)
+	if err != nil {
+		return nil, fmt.Errorf("解析用户信息失败: %v", err)
+	}
+
+	logs.Infof("用户信息: %+v", userInfo)
+
+	var userModel *model.User
+	userModel, exist, err := u.UserRepo.GetUsersByEmail(ctx, userInfo.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	if !exist {
+		// 新增用户
+		_, err := u.Create(ctx, &CreateUserRequest{
+			Email: userInfo.Username,
+			Password: "Pass0rd1233",
+			Name: userInfo.RealName,
+			Description: "SimpleSSO登陆",
+			Locale: "zh-CN",
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		//再次调用获取用户信息
+		userModel, exist, err = u.UserRepo.GetUsersByEmail(ctx, userInfo.Username)
+		if err != nil {
+			return nil, err
+		}
+		if !exist {
+			return nil, errorx.New(errno.ErrUserInfoInvalidateCode)
+		}
+	}
+
 
 	uniqueSessionID, err := u.IDGen.GenID(ctx)
 	if err != nil {

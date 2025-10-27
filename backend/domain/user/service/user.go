@@ -68,6 +68,7 @@ type User interface {
 	// Create creates or registers a new user.
 	Create(ctx context.Context, req *CreateUserRequest) (user *entity.User, err error)
 	Login(ctx context.Context, email, password string) (user *entity.User, err error)
+	SimpleSsoLogin(ctx context.Context, platform, key, payload string) (user *entity.User, err error)
 	Logout(ctx context.Context, userID int64) (err error)
 	ResetPassword(ctx context.Context, email, password string) (err error)
 	GetUserInfo(ctx context.Context, userID int64) (user *entity.User, err error)

@@ -67,7 +67,7 @@ Coze Studio 的后端采用 Golang 开发，前端使用 React + TypeScript，�
          * **meta.conn_config.model**：模型服务的 Model name，在本示例中为火山方舟的 Model ID 或 Endpoint ID，获取方式可参考 [获取火山方舟 Model ID](https://www.volcengine.com/docs/82379/1513689) / [获取火山方舟 Endpoint ID](https://www.volcengine.com/docs/82379/1099522)，或者参考[获取 BytePlus ModelArk Model ID](https://docs.byteplus.com/en/docs/ModelArk/model_id?utm_source=github&utm_medium=readme&utm_campaign=coze_open_source) / [获取 BytePlus ModelArk Endpoint ID](https://docs.byteplus.com/en/docs/ModelArk/1099522?utm_source=github&utm_medium=readme&utm_campaign=coze_open_source)。
          > 中国境内用户可选用火山方舟（Volcengine Ark），非中国境内的用户则可用 BytePlus ModelArk。
 3. 部署并启动服务。
-   首次部署并启动 Coze Studio 需要拉取镜像、构建本地镜像，可能耗时较久，请耐心等待。部署过程中，你会看到以下日志信息。如果看到提示 "Container coze-server Started"，表示 Coze Studio 服务已成功启动。 
+   首次部署并启动 Coze Studio 需要拉取镜像、构建本地镜像，可能耗时较久，请耐心等待。部署过程中，你会看到以下日志信息。如果看到提示 "Container coze-server Started"，表示 Coze Studio 服务已成功启动。
    ```Bash
    # 启动服务
    cd docker
@@ -101,7 +101,7 @@ Coze Studio 的后端采用 Golang 开发，前端使用 React + TypeScript，�
 * [开发工作流](https://www.coze.cn/open/docs/guides/workflow)：工作流是一系列可执行指令的集合，用于实现业务逻辑或完成特定任务。它为应用/智能体的数据流动和任务处理提供了一个结构化框架。 Coze Studio 提供了一个可视化画布，你可以通过拖拽节点迅速搭建工作流。
 * [插件等资源](https://www.coze.cn/open/docs/guides/plugin)：在 Coze Studio，工作流、插件、数据库、知识库和变量统称为资源。
 * **API & SDK**： Coze Studio 支持[对话和工作流相关 API](https://github.com/coze-dev/coze-studio/wiki/6.-API-%E5%8F%82%E8%80%83)，你也可以通过 [Chat SDK](https://www.coze.cn/open/docs/developer_guides/web_sdk_overview) 将智能体或应用集成到本地业务系统。
-* [实践教程](https://www.coze.cn/open/docs/tutorial/chat_sdk_web_online_customer_service)：了解如何通过 Coze Studio 实现各种 AI 场景，例如通过 Chat SDK 搭建网页在线客服。 
+* [实践教程](https://www.coze.cn/open/docs/tutorial/chat_sdk_web_online_customer_service)：了解如何通过 Coze Studio 实现各种 AI 场景，例如通过 Chat SDK 搭建网页在线客服。
 
 ## License
 本项目采用 Apache 2.0 许可证。详情请参阅 [LICENSE](https://github.com/coze-dev/coze-studio/blob/main/LICENSE-APACHE) 文件。
@@ -122,15 +122,15 @@ Coze Studio 的后端采用 Golang 开发，前端使用 React + TypeScript，�
 ### 💬 技术交流与讨论
 加入我们的技术交流群，与其他开发者分享经验、获取项目最新动态：
 
-**飞书群聊**  
+**飞书群聊**
 使用飞书移动端扫描下方二维码加入：
 
 ![Image](https://p9-arcosite.byteimg.com/tos-cn-i-goo7wpa0wc/0a49081e8f3743e8bf3dcdded4bb571a~tplv-goo7wpa0wc-image.image)
 
-**Discord 服务器**  
+**Discord 服务器**
 点击加入：[Coze Community](https://discord.gg/sTVN9EVS4B)
 
-**Telegram 群组**  
+**Telegram 群组**
 点击加入：Telegram Group [Coze](https://t.me/+pP9CkPnomDA0Mjgx)
 
 ## 致谢
@@ -140,3 +140,10 @@ Coze Studio 的后端采用 Golang 开发，前端使用 React + TypeScript，�
 * [FlowGram](https://github.com/bytedance/flowgram.ai) 团队 - 为 Coze Studio 的工作流画布编辑页提供了高质量的流程搭建引擎
 * [Hertz](https://github.com/cloudwego/hertz) 团队 - 高性能、强扩展性的 Go HTTP 框架，用于构建微服务
 * 所有参与测试和反馈的用户
+
+
+
+
+# 接口定义更新
+cd backend
+hz update -idl ../idl/api.thrift -enable_extends
